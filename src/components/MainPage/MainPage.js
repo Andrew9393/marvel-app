@@ -39,16 +39,6 @@ class MainPage extends React.Component {
     } else {
       this.updateList()
     }
-    console.log(this.state.mainChar.length)
-    if(this.state.mainChar.length === 0){
-      this.setState({
-        noList: true
-      })
-    } else {
-      this.setState({
-        noList: false
-      })
-    }
    
   }
 
@@ -59,10 +49,17 @@ class MainPage extends React.Component {
   }
   
   onCharLoaded = (char) => {
-    this.setState({
-      mainChar: char,
-      loadingList: false
-    })
+    if(char.length > 0){
+      this.setState({
+        mainChar: char,
+        loadingList: false,
+        noList: false,
+      })} else {
+        this.setState({
+          noList: true,
+          loadingList: false,
+      })
+    }
   }
 
   setLocation = (curLoc) => {
@@ -90,16 +87,17 @@ class MainPage extends React.Component {
     this.setLocation(`?name=${e.target[0].value}`)
     this.updateListSearch()
   }
-
+Ъ
  render(){
-      const {loadingList} = this.state
+      const {loadingList, noList} = this.state
       const spinner = loadingList ? <Spinner/> : null
+      const massageNoList = noList ? 'нет такого героя' : <HeroesList char={this.state.mainChar}/>
     return(
       <div className="mainList">
         <SearchP inputeValue={this.state.inputValue} onChange={this.onChangeInput} click={this.click}/>
         <h1>Heroes List</h1>
         {spinner}
-        <HeroesList char={this.state.mainChar}/>
+        {massageNoList}
       </div>
     )
   }
