@@ -1,5 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+html{
+  font-family: 'Roboto', sans-serif;
+
+}
+
 .App {
   text-align: center;
+
 }
 
 .App-logo {
@@ -35,4 +43,22 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body.modal{
+  overflow: hidden;
+}
+
+
+.heroesItem{
+  position: relative;
+}
+.heroesItem:after{
+  content: "";
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left:0;
+  right: 0;
+  z-index: 2;
 }

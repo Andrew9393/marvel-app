@@ -9,10 +9,11 @@ class HeroesList extends React.Component {
         <div 
           className="heroesItem" 
           key={char[i].id}
+          id={char[i].id}
+          onClick={this.props.onClick}
         >
           <div className="img"><img src={char[i].imageCharacters} alt={char[i].name} /></div>
           <div className="heroes_name">{char[i].name}</div>
-          <div className="heroes_dec">{char[i].description}</div>
         </div>
       )
     })
@@ -27,12 +28,9 @@ class HeroesList extends React.Component {
 
   render(){
     const charList = this.renderChar(this.props.char)
-    // const {loading} = this.state
-    // const spinner = loading ? <Spinner/> : null
     return (
       <div className="ddd">
         {charList}
-        {/* {spinner} */}
       </div>
     )
   } 

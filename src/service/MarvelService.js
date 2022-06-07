@@ -22,9 +22,13 @@ class MarvelService {
 
   getSearchCharacters = async (inputValue) => {
      const res = await this.getResours(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${inputValue}&${this._apikey}`)
-
      return res.data.results.map(this._list)
-      
+  }
+
+  getInfoHeroes = async (id) => {
+    const res = await this.getResours(`${this._http}characters?limit=9&id=${id}&offset=210&${this._apikey}`)
+    console.log(res.data.results[0])
+    return res.data.results.map(this._list)
   }
   
 
