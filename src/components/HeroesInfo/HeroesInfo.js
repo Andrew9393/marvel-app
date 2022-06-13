@@ -13,13 +13,15 @@ class HearoesInfo extends React.Component {
           <img src={imageCharacters} alt="" />
         </div>
         <div className="info_text">
-        <div className="info_name">
-          <h2>{name}</h2>
+          <div className="info_name">
+            <h2>{name}</h2>
+          </div>
+          <div className="info_descriptoin">
+            <p>{description ? description : 'нет описания для этого героя'}</p>
+          </div>
+          
         </div>
-        <div className="info_descriptoin">
-          <p>{description ? description : 'нет описания для этого героя'}</p>
-        </div>
-        </div>
+
       </div>
     )
   }

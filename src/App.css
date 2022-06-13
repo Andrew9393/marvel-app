@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
+
 html{
   font-family: 'Roboto', sans-serif;
 
@@ -44,11 +45,6 @@ html{
     transform: rotate(360deg);
   }
 }
-
-body.modal{
-  overflow: hidden;
-}
-
 
 .heroesItem{
   position: relative;

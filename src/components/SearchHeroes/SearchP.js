@@ -4,11 +4,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 
-class SearchP extends React.Component {
-
-
-render() {
-  const{inputeValue} = this.props
+const SearchP = (props) => {
+  
+  const{inputeValue} = props
   return (
     <>
       <Box
@@ -16,11 +14,11 @@ render() {
         noValidate
         autoComplete = "off"
         sx = {{display: 'flex', justifyContent: 'center'}}
-        onSubmit={this.props.click}
+        onSubmit={props.click}
       >
         <TextField 
           value={inputeValue}
-          onChange={this.props.onChange}
+          onChange={props.onChange}
           id="outlined-basic" 
           sx={{ width: '45ch'}} 
           label="Search" 
@@ -41,7 +39,7 @@ render() {
       </Box>
     </>
   );
-}
+
 }
     
 

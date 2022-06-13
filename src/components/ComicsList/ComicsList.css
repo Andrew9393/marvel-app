@@ -1,0 +1,25 @@
+.comic_list{
+  display: flex;
+  justify-content: space-between;
+  width: 1000px;
+}
+.comic_list_wrap{
+  width: 80%;
+  margin: 0 auto;
+}
+.comic_img{
+  height: 500px;
+}
+.comic_img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slick-prev:before, .slick-next:before{
+  color: #000!important;
+}
+
+.btn_load{
+  
+}

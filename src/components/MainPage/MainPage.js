@@ -1,148 +1,117 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import { useNavigate, useLocation } from 'react-router';
 import SearchP from "../SearchHeroes/SearchP";
 import HeroesList from "../HeroesList/HeroesList";
 import HearoesInfo from "../HeroesInfo/HeroesInfo";
 import MarvelService from "../../service/MarvelService";
 import {Portal} from '../Portal/Portal'
 import { Spinner } from "../Spinner/Spinner";
+import ComicsList from "../ComicsList/ComicsList";
 
-class MainPage extends React.Component {
 
-  state = {
-    mainChar: [],
-    loadingList: true,
-    inputValue: '',
-    noList: false,
-    infoHeroes: [],
-    msgOpen: false,
-  }
+const MainPage =() => {
 
-  marvelServ = new MarvelService();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  updateList = () => {
-    this.marvelServ
+
+  const [mainChar, setMainChar] = useState([])
+  const [loadingList, setLoadingList] = useState(true)
+  const [inputValue, setInputValue] = useState('')
+  const [noList, setNoList] = useState(false)
+  const [msgOpen, setMsgOpen] = useState(false)
+  const [infoHeroes, setInfoHeroes] = useState([])
+
+  const marvelServ = MarvelService();
+
+  const updateList = () => {
+    marvelServ
       .getAllCharacters()
-      .then(this.onCharLoaded)
+      .then(onCharLoaded)
   }
 
-  updateListSearch = () => {
+  const updateListSearch = () => {
     const filterParametrs = (new URL(document.location)).searchParams;
-    this.marvelServ
+    marvelServ
       .getSearchCharacters(filterParametrs.get("name"))
-      .then(this.onCharLoaded)
+      .then(onCharLoaded)
       
   }
 
-  showInfoHeroes = (id) => {
-    this.marvelServ
-      .getInfoHeroes(id)
-      .then(this.onInfo)
-  }
-
-
-
-  componentDidMount() {
-    let params = (new URL(document.location)).searchParams; 
-    if(window.location.search){
-      this.setState({
-        inputValue:params.get("name")
-      })
-      this.updateListSearch()
-    } else {
-      this.updateList()
+  const getList = () => {
+    const characterQueryName = new URLSearchParams(location.search).get('name');
+    if(characterQueryName){
+      setInputValue(characterQueryName)
+      updateListSearch()
+    }  else {
+          updateList()
     }
   }
-  componentWillUnmount(){
-    this.setState({
-      msgOpen: false
-    })
-   }
 
-  onCharLoading = (id) => {
-    this.setState({
-      loadingList: true
-    })
-  }
+  useEffect(() => {
+    getList()
+    // updateList()
+    setMsgOpen(false)
+  }, [])
 
-  onInfo = (info) => {
-    console.log(info)
-      this.setState({
-        infoHeroes: info,
-      })
+
+  const onInfo = (info) => {
+    setInfoHeroes(infoHeroes => infoHeroes = info)
   }
   
-  onCharLoaded = (char) => {
+  const onCharLoaded = (char) => {
     if(char.length > 0){
-      this.setState({
-        mainChar: char,
-        loadingList: false,
-        noList: false,
-      })} else {
-        this.setState({
-          noList: true,
-          loadingList: false,
-      })
+      setMainChar(mainChar => mainChar = char)
+      setLoadingList(false)
+      setNoList(false)
+  } else {
+    setNoList(true)
+    setLoadingList(false)
     }
   }
 
-  clickItem = (e) => {
-    console.log(e.target)
-    this.state.mainChar.map(item => {
+  const clickItem = (e) => {
+    mainChar.map(item => {
       if(item.id == e.target.id){
-        this.setState({
-          infoHeroes: item,
-          msgOpen: true
-        })
-        document.body.classList.add('modal')
+        setInfoHeroes(infoHeroes => infoHeroes = item)
+        setMsgOpen(true)
+
       } 
     })
   }
 
-  onCloseModal = (e) => {
-    this.setState({
-      msgOpen: false
-    })
-    document.body.classList.remove('modal')
+  const onCloseModal = (e) => {
+    setMsgOpen(false)
   }
   
-  setLocation = (curLoc) => {
-    try {
-      window.history.pushState(null, null, curLoc);
-      return;
-    } catch(e) {}
-      window.location.hash = '#' + curLoc;
-  }
-
-  onChangeInput = (e) => {
-    this.setState({
-      inputValue: e.target.value
-    })
+  const onChangeInput = (e) => {
+    setInputValue(e.target.value)
   }
 
 
-  click = (e) => {
+  const click = (e) => {
     e.preventDefault()
+
     if(e.target[0].value === ''){
-      window.history.pushState(null, null, '/');
-      this.updateList()
+      navigate('/');
+      updateList()
       return;
     }
-    this.setLocation(`?name=${e.target[0].value}`)
-    this.updateListSearch()
+    navigate(`?name=${e.target[0].value}`)
+    updateListSearch()
   }
 
- render(){
-      const {loadingList, noList} = this.state
+
       const spinner = loadingList ? <Spinner/> : null
-      const massageNoList = noList ? 'нет такого героя' : <HeroesList onClick={this.clickItem} char={this.state.mainChar}/>
+      const massageNoList = noList ? 'нет такого героя' : <HeroesList onClick={clickItem} char={mainChar}/>
     return(
       <div className="mainList">
-        <SearchP inputeValue={this.state.inputValue} onChange={this.onChangeInput} click={this.click}/>
+        <SearchP inputeValue={inputValue} onChange={onChangeInput} click={click}/>
         <h1>Heroes List</h1>
         {
-          this.state.msgOpen ? 
+          msgOpen ? 
           <Portal>
-            <HearoesInfo msg={this.state.msgOpen} onCloseModal={this.onCloseModal} infoHeroes={this.state.infoHeroes} />
+            <HearoesInfo msg={msgOpen} onCloseModal={onCloseModal} infoHeroes={infoHeroes} />
           </Portal> : null
         }
         
@@ -150,7 +119,6 @@ class MainPage extends React.Component {
         {massageNoList}
       </div>
     )
-  }
 
 }
 

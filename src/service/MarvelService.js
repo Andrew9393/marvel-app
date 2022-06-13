@@ -1,10 +1,11 @@
 
-class MarvelService {
+const MarvelService = () => {
 
-  _http = 'https://gateway.marvel.com:443/v1/public/'
-  _apikey = 'apikey=e17d8ab7f895204f28a89aeb6a00693a'
+  const _http = 'https://gateway.marvel.com:443/v1/public/'
+  const _apikey = 'apikey=e17d8ab7f895204f28a89aeb6a00693a'
+  const _baseOffset = '210'
 
-  getResours = async(url) => {
+  const getResours = async(url) => {
     const res = await fetch(url)
     
     if(!res.ok){
@@ -14,25 +15,35 @@ class MarvelService {
     return await res.json();
   }
 
-  getAllCharacters = async () => {
-    const res = await this.getResours(`${this._http}characters?limit=9&offset=210&&${this._apikey}`)
-    //  const res = await this.getResours(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=ir&${this._apikey}`)
-    return res.data.results.map(this._list)
+  const getAllCharacters = async () => {
+    const res = await getResours(`${_http}characters?limit=9&offset=210&&${_apikey}`)
+    return res.data.results.map(_list)
   }
 
-  getSearchCharacters = async (inputValue) => {
-     const res = await this.getResours(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${inputValue}&${this._apikey}`)
-     return res.data.results.map(this._list)
+  const getSearchCharacters = async (inputValue) => {
+     const res = await getResours(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${inputValue}&${_apikey}`)
+     return res.data.results.map(_list)
   }
 
-  getInfoHeroes = async (id) => {
-    const res = await this.getResours(`${this._http}characters?limit=9&id=${id}&offset=210&${this._apikey}`)
-    console.log(res.data.results[0])
-    return res.data.results.map(this._list)
+  const getInfoHeroes = async (id) => {
+    const res = await getResours(`${_http}characters?limit=9&id=${id}&offset=210&${_apikey}`)
+    return res.data.results.map(_list)
+  }
+
+  const getComicsList = async (offset = _baseOffset) => {
+    const result = await getResours(`${_http}comics?limit=9&offset=${offset}&${_apikey}`)
+    console.log(result.data.results.map(_listComic))
+    return result.data.results.map(_listComic)
+  }
+
+  const getComic = async (id) => {
+    const result = await getResours(`${_http}comics/${id}?${_apikey}`)
+    console.log(result.data.results[0])
+    return result.data.results.map(_listComic)
   }
   
 
-  _list = (list) => {
+  const _list = (list) => {
       return (
         {
           name: list.name,
@@ -42,6 +53,22 @@ class MarvelService {
         }
       )
   }
+
+  const _listComic = (listComic) => {
+    return (
+      {
+        title: listComic.title,
+        description: listComic.description ? listComic.description : 'no description',
+        imageCharacters: listComic.thumbnail.path + '.' + listComic.thumbnail.extension,
+        id: listComic.id,
+        format: listComic.format,
+        price: listComic.prices[0].price ? `${listComic.prices[0].price}$` : 'not available',
+        creators: listComic.creators.items
+      }
+    )
+}
+
+  return {getResours, getAllCharacters, getSearchCharacters, getInfoHeroes, getComicsList, getComic}
 }
 
 export default MarvelService;
