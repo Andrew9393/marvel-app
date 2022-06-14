@@ -1,0 +1,39 @@
+.infoComic{
+  padding: 50px 0 ;
+  display: flex;
+  width: 80%;
+  margin: 0 auto
+}
+
+.infoComic_img{
+max-height: 500px ;
+width: 40%;
+margin: 0 20px 0 0 ;
+}
+.infoComic_img img{
+  height: 100%;
+}
+
+.info_block{
+  text-align: center;
+  width: 100%;
+}
+
+.infoComic_price{
+  margin: 30px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.infoComic_price b{
+  font-size: 20px;
+}
+
+.btn{
+  background: darkblue;
+  color: aliceblue;
+  padding: 10px 35px;
+  font-size: 16px;
+  border-radius: 10px;
+}

@@ -5,6 +5,7 @@ import './ComicsList.css';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import { Spinner } from "../Spinner/Spinner";
 
 const ComicsList = () => {
   const [comicsList, setComicsList] = useState([]);
@@ -71,6 +72,7 @@ const onRequest = (offset, initial) => {
 
 const onComicLoading = () => {
   setNewItemLoading(true)
+  setLoading(false)
 }
 
 const onLoadedComics = (newComicsList) => {
@@ -80,20 +82,19 @@ const onLoadedComics = (newComicsList) => {
   setOffset((offset) => offset + 5)
 }
 
-const getComicOnID = (id) => {
-  marvelService
-    .getComic(id)
-    .then(res => console.log(res))
-}
-
+// const getComicOnID = (id) => {
+//   marvelService
+//     .getComic(id)
+//     .then(res => console.log(res))
+// }
 
   return(
-    
-    // <div className="comic_list_wrap" onClick={(e) => getComicOnID((e.target).closest('.comic_item').getAttribute("id"))}>
+    <>
+    {/* <div className="comic_list_wrap" onClick={(e) => getComicOnID((e.target).closest('.comic_item').getAttribute("id"))}> */}
     <div className="comic_list_wrap" >
       <Slider {...settings}>
         {comicsList.map((el, i) => (
-            <Link to={`/comic/${el.id}`} key={i}>
+          <Link to={`/comic/${el.id}`} key={i}>
               <div className="comic_item" id={el.id}  >
                 <div className="comic_img">
                   <img src={el.imageCharacters} alt="" />
@@ -115,6 +116,7 @@ const getComicOnID = (id) => {
       </Slider>
       </div>
     
+    </>
   )
   
 }
